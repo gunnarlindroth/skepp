@@ -14,7 +14,7 @@ public final class Board {
 
     int lineIndex = 0;
 
-    sb.append("  0123456789\n");
+    sb.append("  a b c d e f g h i j\n");
 
     for (int[] line : matrix) {
 
@@ -22,7 +22,7 @@ public final class Board {
       sb.append(" ");
 
       for (int column : line) {
-        sb.append('x');
+        sb.append("x ");
       }
 
       sb.append("\n");
