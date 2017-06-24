@@ -8,5 +8,6 @@ public final class Start {
         System.out.println("Mitt motdrag blir F9");
         System.out.println("Miss!");
         System.out.println("Miss igen!");
+        System.out.println("Träff!");
     }
 }
