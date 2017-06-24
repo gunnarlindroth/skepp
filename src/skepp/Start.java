@@ -10,7 +10,7 @@ public final class Start {
         System.out.println("Miss igen!");
         System.out.println("Träff!");
                 
-        System.out.println("\nNu måste vi göra ett bräde! Så här kanske?\n");
+        System.out.println("\nNu måste vi göra ett bräde! Så här kanske?\n"); //Ändrade designen lite, kanske är bättre?
         
         Board board = new Board();
         
