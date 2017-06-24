@@ -9,5 +9,11 @@ public final class Start {
         System.out.println("Miss!");
         System.out.println("Miss igen!");
         System.out.println("Träff!");
+                
+        System.out.println("\nNu måste vi göra ett bräde! Så här kanske?\n");
+        
+        Board board = new Board();
+        
+        System.out.println(board);
     }
 }
