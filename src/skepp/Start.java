@@ -20,6 +20,10 @@ public final class Start {
         
         board.addShip(new Ship(ShipType.DESTROYER, 5, 8, SwingUtilities.VERTICAL));
         
+        board.addShip(new Ship(ShipType.FRIGATE, 7, 1, SwingUtilities.HORIZONTAL));
+        
+        board.addShip(new Ship(ShipType.SUBMARINE, 0, 0, SwingUtilities.HORIZONTAL));
+        
         System.out.println(board);
     }
 }

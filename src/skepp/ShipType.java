@@ -19,10 +19,14 @@ public enum ShipType {
         
       case DESTROYER:
         return 3;
-        
+    
+      case FRIGATE:
+        return 2;  
         
       case SUBMARINE:
         return 1;
+        
+        
 
       default:
         return 0;

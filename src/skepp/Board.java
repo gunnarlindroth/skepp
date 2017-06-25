@@ -39,12 +39,12 @@ public final class Board {
     return sb.toString();
   }
 
-  private String getShipIndicator(int lineIndex, int column) {
+  private String getShipIndicator(int row, int column) {
     
     // System.out.println(" checking " + lineIndex + " : " + column);
     
     for (Ship ship : shipSet) {
-      String shipIndicator = ship.getIndicator(lineIndex, column);
+      String shipIndicator = ship.getIndicator(row, column);
       if (!shipIndicator.isEmpty()) {
         return shipIndicator;
       }
