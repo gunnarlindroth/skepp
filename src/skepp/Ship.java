@@ -6,41 +6,53 @@ import javax.swing.SwingUtilities;
 // explicit "ship classes" which extends this one? E g "ShipSubmarine" and "ShipDestroyer"?
 public class Ship {
 
+    private final ShipType shipType;
+
     private final int lineStart;
     private final int lineEnd;
 
     private final int columnStart;
     private final int columnEnd;
 
-    Ship(ShipType shipType, int lineStart, int columnStart, int orientation) {
-
+    Ship(ShipType shipType, int lineStart, int columnStart, boolean horizontal) {
+        this.shipType = shipType;
         this.lineStart = lineStart;
         this.columnStart = columnStart;
 
-        if (orientation == SwingUtilities.HORIZONTAL) {
+        if (horizontal) {
             this.lineEnd = lineStart;
             this.columnEnd = columnStart + ShipType.getShipLength(shipType) - 1;
-        } else { // SwingUtilities.VERTICAL
+        } else { 
             this.lineEnd = lineStart + ShipType.getShipLength(shipType) - 1;
             this.columnEnd = columnStart;
         }
     }
 
+    Ship(ShipType shipType, Coordinate coordinate, boolean horizontal ) {
+        this(shipType, coordinate.getRow(), coordinate.getColumn(), horizontal);
+    }
+
     String getIndicator(int line, int column) {
         if (line >= lineStart && line <= lineEnd && column >= columnStart && column <= columnEnd) {
             // yes yes yes, this is our ship!
-            if (columnEnd - columnStart +1 == 4 ||lineEnd - lineStart +1 == 4)  {
-                return "C ";
-            } else if (columnEnd - columnStart +1 == 3 ||lineEnd - lineStart +1 == 3) {
-                return "D ";
-            } else if (columnEnd - columnStart +1 == 2 ||lineEnd - lineStart +1 == 2){
-                return "F ";
-            } else {
-                return "S ";
+            switch (shipType) {
+
+                case CRUISER:
+                    return "C";
+
+                case DESTROYER:
+                    return "D";
+
+                case FRIGATE:
+                    return "F";
+
+                case SUBMARINE:
+                    return "S";
+
+                default:
+                    return "M";
             }
 
-            // TODO maybe we could return "C" for CRUISER, "D" for DESTROYER etc?
-            
         }
         return Util.EMPTY_STRING;
     }
