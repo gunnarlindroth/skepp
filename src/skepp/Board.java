@@ -89,7 +89,7 @@ public final class Board {
 	// already existing one
 	Set<Coordinate> mySet = new HashSet<Coordinate>();
 
-	// iterate over the set of available coordinates and add anyone that is
+	// iterate over the set of available coordinates and add all that are
 	// legal for this kind of ship
 	for (Coordinate coordinate : availableCoordinateSet) {
 	    if (isLegalCoordinate(shipType, horizontal, coordinate)) {
@@ -100,6 +100,10 @@ public final class Board {
 	return new LinkedList<Coordinate>(mySet);
     }
 
+    /**
+     * Return true if the provided ship type can successfully be added to
+     * the provided coordinate.
+     */
     private boolean isLegalCoordinate(ShipType shipType, boolean horizontal, Coordinate coordinate) {
 	if (horizontal && coordinate.getColumn() + ShipType.getShipLength(shipType) > SIZE) {
 	    return false;
@@ -109,7 +113,7 @@ public final class Board {
 	    return false;
 	}
 
-	// TODO - ShipType.getArea() is not yet implemented!!!
+	// TODO Tobias - ShipType.getArea() is not yet implemented!!!
 	Collection<Coordinate> shipArea = ShipType.getArea(shipType, horizontal, coordinate);
 	for (Coordinate c : shipArea) {
 	    if (!availableCoordinateSet.contains(c)) {
@@ -128,7 +132,7 @@ public final class Board {
 	Collection<Coordinate> occupied = ship.getCoordinatesShip();
 	availableCoordinateSet.removeAll(occupied);
 	System.out.println(
-		"Adding ship " + ship.getShipType() + ", reduced available set: " + availableCoordinateSet.size());
+		"Added ship " + ship.getShipType() + ", reduced available set: " + availableCoordinateSet.size());
     }
 
     private List<Coordinate> getPossibleCoordinatesOld(ShipType shipType, boolean horizontal) {

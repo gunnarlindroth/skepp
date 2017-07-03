@@ -36,7 +36,7 @@ public enum ShipType {
 
 	// TODO!!!
 	// Create a set of coordinates which would be occupied by this kind of
-	// shipType and direction at the coordinate starting point
+	// shipType and direction if added to the specified coordinate starting point
 
 	return Collections.EMPTY_SET;
     }
