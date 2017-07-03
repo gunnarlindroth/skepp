@@ -70,7 +70,7 @@ public final class Board {
 	for (ShipType shipType : shipsAtGameStart) {
 
 	    boolean horizontal = random.nextBoolean();
-	    List<Coordinate> list = getAvailablCoordinates(shipType, horizontal);
+	    List<Coordinate> list = getAvailableCoordinates(shipType, horizontal);
 	    if (!list.isEmpty()) {
 		int randomCoordinate = random.nextInt(list.size());
 		Coordinate coordinate = list.get(randomCoordinate);
@@ -83,7 +83,7 @@ public final class Board {
      * This method will return a list of coordinates which are possible to use
      * when adding a specified type of ship in a specified direction.
      */
-    private List<Coordinate> getAvailablCoordinates(ShipType shipType, boolean horizontal) {
+    private List<Coordinate> getAvailableCoordinates(ShipType shipType, boolean horizontal) {
 
 	// here we need to make sure that the new ship doesn't collide with an
 	// already existing one
