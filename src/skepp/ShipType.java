@@ -4,74 +4,100 @@ import java.util.*;
 
 public enum ShipType {
 
-    CRUISER,
-    DESTROYER,
-    FRIGATE,
-    SUBMARINE;
+    CRUISER, DESTROYER, FRIGATE, SUBMARINE;
 
     static final int getShipLength(ShipType shipType) {
         switch (shipType) {
 
-            case CRUISER:
-                return 4;
+        case CRUISER:
+            return 4;
 
-            case DESTROYER:
-                return 3;
+        case DESTROYER:
+            return 3;
 
-            case FRIGATE:
-                return 2;
+        case FRIGATE:
+            return 2;
 
-            case SUBMARINE:
-                return 1;
+        case SUBMARINE:
+            return 1;
 
-            default:
-                return 0;
+        default:
+            return 0;
         }
     }
 
+    /**
+     * Create a set of coordinates which would be occupied by this kind of shipType and direction if added to the
+     * specified coordinate starting point
+     * 
+     * TODO maybe this way of finding out occupied coordinates is not really very clever... why not return false
+     * immediately if a coordinate is already occupied? This would save lots of iterations!
+     * 
+     * TODO maybe it would be better to remove the available coordinates after adding a ship?
+     * 
+     * OBS! Något verkar fortfarande vara fel... Ibland hamnar skeppen väldigt nära varandra ändå? Hmm... Och det är
+     * _aldrig_ något skepp som hamnar på rad 9???
+     */
     static Collection<Coordinate> getArea(ShipType shipType, boolean horizontal, Coordinate coordinate) {
-        Collection<Coordinate> Occupied = new HashSet<>();
-        int y = coordinate.getRow();
-        int x = coordinate.getColumn();
+
+        // jag flyttar skapandet av HashSet till metoden som faktiskt använder den!
+
+        // System.out.println("getArea " + shipType);
+
+        int row = coordinate.getRow();
+        int column = coordinate.getColumn();
         int length = getShipLength(shipType);
-        if (shipType == ShipType.CRUISER) {
-            if (horizontal) {
-                occupiedCoordinatesHorizontal(Occupied, y, x, length);
-            } else {
-                occupiedCoordinatesVertical(Occupied, y, x, length);
 
-            }
-            // TODO!!!
-            // Create a set of coordinates which would be occupied by this kind of
-            // shipType and direction if added to the specified coordinate starting point
-        } else if (shipType == ShipType.DESTROYER) {
-            if (horizontal) {
-                occupiedCoordinatesHorizontal(Occupied, y, x, length);
-            } else {
-                occupiedCoordinatesVertical(Occupied, y, x, length);
+        // i det här fallet finns det ingen anledning att dela upp beräkningarna per skepps-typ?
+        // du har redan tagit reda på längden/bredden av den aktuella båten!
 
-            }
+        if (horizontal) {
+            return occupiedCoordinatesHorizontal(row, column, length);
+        } else {
+            return occupiedCoordinatesVertical(row, column, length);
         }
-        return Collections.EMPTY_SET;
+
+        // return Collections.EMPTY_SET;
     }
 
-    private static void occupiedCoordinatesHorizontal(Collection<Coordinate> Occupied, int y, int x, int length) {
-        for (int i = y - 1; i <= y + 1; y++) {
-            for (int j = x; i < (x + length); x++) {
-                Occupied.add(new Coordinate(i, j));
+    private static Collection<Coordinate> occupiedCoordinatesHorizontal(int row, int column, int length) {
+
+        // tjoho, snyggt med "HashSet<>" utan typen "<Coordinate>" - det här är det moderna sättet att skriva!
+
+        // jag ändrar "Occupied" till "occupied", variabler börjar alltid med liten bokstav
+        Collection<Coordinate> occupied = new HashSet<>();
+
+        for (int i = row - 1; i <= row + 1; i++) {
+            for (int j = column; j < (column + length); j++) {
+                if (i >= 0 && j >= 0) {
+                    Coordinate c = new Coordinate(i, j);
+                    // System.out.println("occ h: " + c);
+                    occupied.add(c);
+                }
             }
         }
-        Occupied.add(new Coordinate(y, x - 1));
-        Occupied.add(new Coordinate(y, x + length));
+        occupied.add(new Coordinate(row, column - 1));
+        occupied.add(new Coordinate(row, column + length));
+
+        return occupied;
     }
 
-    private static void occupiedCoordinatesVertical(Collection<Coordinate> Occupied, int y, int x, int length) {
-        for (int i = x - 1; i <= x + 1; x++) {
-            for (int j = y; i > (y + length); x++) {
-                Occupied.add(new Coordinate(j, i));
+    private static Collection<Coordinate> occupiedCoordinatesVertical(int row, int column, int length) {
+
+        Collection<Coordinate> occupied = new HashSet<>();
+
+        for (int i = column - 1; i <= column + 1; i++) {
+            for (int j = row; j > (row + length); j++) {
+                if (i >= 0 && j >= 0) {
+                    Coordinate c = new Coordinate(j, i);
+                    // System.out.println("occ v: " + c);
+                    occupied.add(c);
+                }
             }
         }
-        Occupied.add(new Coordinate(y - 1, x));
-        Occupied.add(new Coordinate(y + length, x));
+        occupied.add(new Coordinate(row - 1, column));
+        occupied.add(new Coordinate(row + length, column));
+
+        return occupied;
     }
 }

@@ -4,13 +4,15 @@ import java.util.*;
 
 public final class Board {
 
-    private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER, ShipType.DESTROYER,
-        ShipType.DESTROYER, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.SUBMARINE,
-        ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE};
+    private static final ShipType[] shipsAtGameStart = new ShipType[] { ShipType.CRUISER, ShipType.DESTROYER,
+            ShipType.DESTROYER, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.SUBMARINE,
+            ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE };
+
+    private static final int SIZE = 10;
+    private static final int SIZE_MATRIX = SIZE * SIZE;
 
     private static final Random random = new Random();
 
-    private static final int SIZE = 10;
     private final int[][] matrix;
 
     // this set contains all ships of this board
@@ -80,17 +82,15 @@ public final class Board {
     }
 
     /**
-     * This method will return a list of coordinates which are possible to use
-     * when adding a specified type of ship in a specified direction.
+     * This method will return a list of coordinates which are possible to use when adding a specified type of ship in a
+     * specified direction.
      */
     private List<Coordinate> getAvailableCoordinates(ShipType shipType, boolean horizontal) {
 
-        // here we need to make sure that the new ship doesn't collide with an
-        // already existing one
+        // here we need to make sure that the new ship doesn't collide with an already existing one
         Set<Coordinate> mySet = new HashSet<Coordinate>();
 
-        // iterate over the set of available coordinates and add all that are
-        // legal for this kind of ship
+        // iterate over the set of available coordinates and add all that are legal for this kind of ship
         for (Coordinate coordinate : availableCoordinateSet) {
             if (isLegalCoordinate(shipType, horizontal, coordinate)) {
                 mySet.add(coordinate);
@@ -101,8 +101,7 @@ public final class Board {
     }
 
     /**
-     * Return true if the provided ship type can successfully be added to the
-     * provided coordinate.
+     * Return true if the provided ship type can successfully be added to the provided coordinate.
      */
     private boolean isLegalCoordinate(ShipType shipType, boolean horizontal, Coordinate coordinate) {
         if (horizontal && coordinate.getColumn() + ShipType.getShipLength(shipType) > SIZE) {
@@ -113,11 +112,14 @@ public final class Board {
             return false;
         }
 
-        // TODO Tobias - ShipType.getArea() is not yet implemented!!!
-        Collection<Coordinate> shipArea = ShipType.getArea(shipType, horizontal, coordinate);
-        for (Coordinate c : shipArea) {
-            if (!availableCoordinateSet.contains(c)) {
-                return false;
+        // let's check that coordinate is not too close to another ship
+        if (availableCoordinateSet.size() < SIZE_MATRIX) { // don't bother to check if no other ships are added
+            
+            Collection<Coordinate> shipArea = ShipType.getArea(shipType, horizontal, coordinate);
+            for (Coordinate c : shipArea) {
+                if (!availableCoordinateSet.contains(c)) {
+                    return false;
+                }
             }
         }
 
