@@ -13,6 +13,7 @@ public class Ship {
 
     private final int columnStart;
     private final int columnEnd;
+    
 
     Ship(ShipType shipType, int lineStart, int columnStart, boolean horizontal) {
 	this.shipType = shipType;
