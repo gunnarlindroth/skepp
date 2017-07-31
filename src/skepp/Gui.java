@@ -92,6 +92,7 @@ public class Gui extends JFrame {
             board.generateShips();
         }
         else {
+            board.generateShips();
             // TODO maybe some action is needed to initialize a "remote" (opponent) board?
             // it should probably still generate ships, but just not display them?
             // anyway the boards should probably be added as fields in this class

@@ -69,7 +69,7 @@ public enum ShipType {
 
         for (int i = row - 1; i <= row + 1; i++) {
             for (int j = column; j < (column + length); j++) {
-                if (i >= 0 && j >= 0) {
+                if (i >= 0 && j >= 0 && i < 10 && j < 10) {
                     Coordinate c = new Coordinate(i, j);
                     // System.out.println("occ h: " + c);
                     occupied.add(c);
@@ -86,11 +86,11 @@ public enum ShipType {
 
         Collection<Coordinate> occupied = new HashSet<>();
 
-        for (int i = column - 1; i <= column + 1; i++) {
-            for (int j = row; j > (row + length); j++) {
-                if (i >= 0 && j >= 0) {
+        for (int i = column -1; i <= column + 1; i++) {
+            for (int j = row; j < (row + length); j++) {
+                if (i >= 0 && j >= 0 && i < 10 && j < 10) {
                     Coordinate c = new Coordinate(j, i);
-                    // System.out.println("occ v: " + c);
+                    //System.out.println("occ v: " + c);
                     occupied.add(c);
                 }
             }

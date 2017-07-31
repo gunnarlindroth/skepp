@@ -4,12 +4,13 @@ import java.util.*;
 
 public final class Board {
 
-    private static final ShipType[] shipsAtGameStart = new ShipType[] { ShipType.CRUISER, ShipType.DESTROYER,
-            ShipType.DESTROYER, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.SUBMARINE,
-            ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE };
+    private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER, ShipType.DESTROYER,
+        ShipType.DESTROYER, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.SUBMARINE,
+        ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE};
+//    private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER};
 
-    private static final int SIZE = 10;
-    private static final int SIZE_MATRIX = SIZE * SIZE;
+    private static final int BOARDSIZE = 10;
+    private static final int SIZE_MATRIX = BOARDSIZE * BOARDSIZE;
 
     private static final Random random = new Random();
 
@@ -23,7 +24,7 @@ public final class Board {
     private final HashSet<Coordinate> availableCoordinateSet;
 
     Board() {
-        matrix = new int[SIZE][SIZE];
+        matrix = new int[BOARDSIZE][BOARDSIZE];
         shipSet = new HashSet<Ship>();
 
         availableCoordinateSet = new HashSet<Coordinate>();
@@ -70,51 +71,62 @@ public final class Board {
 
     void generateShips() {
         for (ShipType shipType : shipsAtGameStart) {
+            System.out.println("Adding ship: " + shipType);
+            
 
             boolean horizontal = random.nextBoolean();
+            if(shipType==ShipType.SUBMARINE){
+                System.out.println("Hoppsam, en submarine ska läggas till " + horizontal);
+                
+            }
+
             List<Coordinate> list = getAvailableCoordinates(shipType, horizontal);
             if (!list.isEmpty()) {
                 int randomCoordinate = random.nextInt(list.size());
                 Coordinate coordinate = list.get(randomCoordinate);
                 addShip(new Ship(shipType, coordinate, horizontal));
+            }else{
+                System.out.println("VARNING");
             }
         }
     }
 
     /**
-     * This method will return a list of coordinates which are possible to use when adding a specified type of ship in a
-     * specified direction.
+     * This method will return a list of coordinates which are possible to use
+     * when adding a specified type of ship in a specified direction.
      */
     private List<Coordinate> getAvailableCoordinates(ShipType shipType, boolean horizontal) {
 
         // here we need to make sure that the new ship doesn't collide with an already existing one
-        Set<Coordinate> mySet = new HashSet<Coordinate>();
+        List<Coordinate> list = new LinkedList<Coordinate>();
+        
+        
+        
 
         // iterate over the set of available coordinates and add all that are legal for this kind of ship
         for (Coordinate coordinate : availableCoordinateSet) {
             if (isLegalCoordinate(shipType, horizontal, coordinate)) {
-                mySet.add(coordinate);
+                list.add(coordinate);
             }
         }
 
-        return new LinkedList<Coordinate>(mySet);
+        return list;
     }
 
     /**
-     * Return true if the provided ship type can successfully be added to the provided coordinate.
+     * Return true if the provided ship type can successfully be added to the
+     * provided coordinate.
      */
     private boolean isLegalCoordinate(ShipType shipType, boolean horizontal, Coordinate coordinate) {
-        if (horizontal && coordinate.getColumn() + ShipType.getShipLength(shipType) > SIZE) {
+        if (horizontal && coordinate.getColumn() + ShipType.getShipLength(shipType) > BOARDSIZE) {
             return false;
-        }
-
-        if (coordinate.getRow() + ShipType.getShipLength(shipType) > SIZE) {
+        } else if (coordinate.getRow() + ShipType.getShipLength(shipType) > BOARDSIZE) {
             return false;
         }
 
         // let's check that coordinate is not too close to another ship
         if (availableCoordinateSet.size() < SIZE_MATRIX) { // don't bother to check if no other ships are added
-            
+
             Collection<Coordinate> shipArea = ShipType.getArea(shipType, horizontal, coordinate);
             for (Coordinate c : shipArea) {
                 if (!availableCoordinateSet.contains(c)) {
@@ -129,58 +141,14 @@ public final class Board {
     void addShip(Ship ship) {
 
         shipSet.add(ship);
+        System.out.println("Jag la till ett skepp (" + ship.getShipType() + ") size: " + availableCoordinateSet.size());
 
         // make sure to reduce the set of available coordinates
-        Collection<Coordinate> occupied = ship.getCoordinatesShip();
+        Collection<Coordinate> occupied = ShipType.getArea(ship.getShipType(), ship.isHorizontal(), ship.getInitialCoordinate());
+        System.out.println("Occupied: " + occupied.size());
         availableCoordinateSet.removeAll(occupied);
         System.out.println(
                 "Added ship " + ship.getShipType() + ", reduced available set: " + availableCoordinateSet.size());
-    }
-
-    private List<Coordinate> getPossibleCoordinatesOld(ShipType shipType, boolean horizontal) {
-        List<Coordinate> list = new LinkedList<Coordinate>();
-        Coordinate coordinate = getRandomCoordinate();
-        System.out.println("Random Coordinate: " + coordinate);
-
-        if (horizontal) {
-            int row = random.nextInt(10);
-            if (shipType == ShipType.CRUISER) {
-                int column = random.nextInt(7);
-                list.add(new Coordinate(row, column));
-
-            } else if (shipType == ShipType.DESTROYER) {
-                int column = random.nextInt(8);
-                list.add(new Coordinate(row, column));
-
-            } else if (shipType == ShipType.FRIGATE) {
-                int column = random.nextInt(9);
-                list.add(new Coordinate(row, column));
-
-            } else if (shipType == ShipType.SUBMARINE) {
-                int column = random.nextInt(10);
-                list.add(new Coordinate(row, column));
-            }
-        } else {
-            int column = random.nextInt(10);
-            if (shipType == ShipType.CRUISER) {
-                int row = random.nextInt(7);
-                list.add(new Coordinate(row, column));
-
-            } else if (shipType == ShipType.DESTROYER) {
-                int row = random.nextInt(8);
-                list.add(new Coordinate(row, column));
-
-            } else if (shipType == ShipType.FRIGATE) {
-                int row = random.nextInt(9);
-                list.add(new Coordinate(row, column));
-
-            } else if (shipType == ShipType.SUBMARINE) {
-                int row = random.nextInt(10);
-                list.add(new Coordinate(row, column));
-            }
-        }
-
-        return list;
     }
 
     private Coordinate getRandomCoordinate() {
@@ -188,4 +156,5 @@ public final class Board {
         int randomCoordinateIndex = random.nextInt(list.size());
         return list.get(randomCoordinateIndex);
     }
+
 }

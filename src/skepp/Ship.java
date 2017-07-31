@@ -7,6 +7,7 @@ import java.util.*;
 public class Ship {
 
     private final ShipType shipType;
+    
 
     private final int lineStart;
     private final int lineEnd;
@@ -14,11 +15,15 @@ public class Ship {
     private final int columnStart;
     private final int columnEnd;
     
+    
+    
+    private final boolean horizontal;
 
     Ship(ShipType shipType, int lineStart, int columnStart, boolean horizontal) {
 	this.shipType = shipType;
 	this.lineStart = lineStart;
 	this.columnStart = columnStart;
+        this.horizontal = horizontal;
 
 	if (horizontal) {
 	    this.lineEnd = lineStart;
@@ -35,6 +40,10 @@ public class Ship {
 
     ShipType getShipType() {
 	return shipType;
+    }
+    
+    Coordinate getInitialCoordinate() {
+        return new Coordinate(lineStart, columnStart);
     }
 
     String getIndicator(int line, int column) {
@@ -69,13 +78,17 @@ public class Ship {
 	List<Coordinate> list = new LinkedList<Coordinate>();
 	for (int i = lineStart; i <= lineEnd; i++) {
 	    for (int j = columnStart; j <= columnEnd; j++) {
-		Coordinate c = new Coordinate(i, j);
-		// System.out.println("Adding c: "+c);
+		Coordinate c = new Coordinate(i, j);              
+		 //System.out.println("Adding c: "+c);
 		list.add(c);
 	    }
 	}
 
 	return list;
+    }
+
+    boolean isHorizontal() {
+        return horizontal;
     }
 
 }
