@@ -4,10 +4,9 @@ import java.util.*;
 
 public final class Board {
 
-    private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER, ShipType.DESTROYER,
-        ShipType.DESTROYER, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.SUBMARINE,
-        ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE};
-//    private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER};
+private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.FRIGATE, 
+    ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE};
+     //private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER};
 
     private static final int BOARDSIZE = 10;
     private static final int SIZE_MATRIX = BOARDSIZE * BOARDSIZE;
@@ -105,8 +104,10 @@ public final class Board {
 
         // iterate over the set of available coordinates and add all that are legal for this kind of ship
         for (Coordinate coordinate : availableCoordinateSet) {
+            System.out.println("Allkoordinat: " + coordinate);
             if (isLegalCoordinate(shipType, horizontal, coordinate)) {
                 list.add(coordinate);
+                System.out.println("Koordinat:" + coordinate);
             }
         }
 
@@ -144,7 +145,7 @@ public final class Board {
         System.out.println("Jag la till ett skepp (" + ship.getShipType() + ") size: " + availableCoordinateSet.size());
 
         // make sure to reduce the set of available coordinates
-        Collection<Coordinate> occupied = ShipType.getArea(ship.getShipType(), ship.isHorizontal(), ship.getInitialCoordinate());
+        Collection<Coordinate> occupied = ShipType.getAreaPerimeter(ship.getShipType(), ship.isHorizontal(), ship.getInitialCoordinate());
         System.out.println("Occupied: " + occupied.size());
         availableCoordinateSet.removeAll(occupied);
         System.out.println(
