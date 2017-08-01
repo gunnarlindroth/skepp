@@ -4,9 +4,9 @@ import java.util.*;
 
 public final class Board {
 
-private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.FRIGATE, 
-    ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE};
-     //private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER};
+    private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.FRIGATE, ShipType.FRIGATE, ShipType.FRIGATE,
+        ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.SUBMARINE};
+    //private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUISER};
 
     private static final int BOARDSIZE = 10;
     private static final int SIZE_MATRIX = BOARDSIZE * BOARDSIZE;
@@ -21,6 +21,8 @@ private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUIS
     // this set keeps track of available coordinates
     // (useful when adding a new ship)
     private final HashSet<Coordinate> availableCoordinateSet;
+    
+    private final HashSet<Coordinate> shotSet;
 
     Board() {
         matrix = new int[BOARDSIZE][BOARDSIZE];
@@ -32,6 +34,9 @@ private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUIS
                 availableCoordinateSet.add(new Coordinate(row, col));
             }
         }
+        
+        shotSet = new HashSet<>();
+        shotSet.add(new Coordinate(2,3));
     }
 
     public String toString() {
@@ -44,8 +49,13 @@ private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUIS
             sb.append(" ");
 
             for (int col = 0; col < matrix[row].length; col++) {
-                String shipIndicator = getShipIndicator(row, col);
-                sb.append(shipIndicator);
+                //Kolla om någon har skjutit i den här positionen
+                if (shotExists(row, col)) {
+                    sb.append("X ");
+                } else {
+                    String shipIndicator = getShipIndicator(row, col);
+                    sb.append(shipIndicator);
+                }
             }
 
             sb.append("\n");
@@ -71,12 +81,11 @@ private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUIS
     void generateShips() {
         for (ShipType shipType : shipsAtGameStart) {
             System.out.println("Adding ship: " + shipType);
-            
 
             boolean horizontal = random.nextBoolean();
-            if(shipType==ShipType.SUBMARINE){
+            if (shipType == ShipType.SUBMARINE) {
                 System.out.println("Hoppsam, en submarine ska läggas till " + horizontal);
-                
+
             }
 
             List<Coordinate> list = getAvailableCoordinates(shipType, horizontal);
@@ -84,7 +93,7 @@ private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUIS
                 int randomCoordinate = random.nextInt(list.size());
                 Coordinate coordinate = list.get(randomCoordinate);
                 addShip(new Ship(shipType, coordinate, horizontal));
-            }else{
+            } else {
                 System.out.println("VARNING");
             }
         }
@@ -98,9 +107,6 @@ private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUIS
 
         // here we need to make sure that the new ship doesn't collide with an already existing one
         List<Coordinate> list = new LinkedList<Coordinate>();
-        
-        
-        
 
         // iterate over the set of available coordinates and add all that are legal for this kind of ship
         for (Coordinate coordinate : availableCoordinateSet) {
@@ -156,6 +162,11 @@ private static final ShipType[] shipsAtGameStart = new ShipType[]{ShipType.CRUIS
         List<Coordinate> list = new LinkedList<Coordinate>(availableCoordinateSet);
         int randomCoordinateIndex = random.nextInt(list.size());
         return list.get(randomCoordinateIndex);
+    }
+
+    private boolean shotExists(int row, int col) {
+        Coordinate c = new Coordinate(row,col);
+        return shotSet.contains(c);
     }
 
 }
